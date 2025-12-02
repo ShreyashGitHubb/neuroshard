@@ -50,19 +50,94 @@ git add models/resnet50.pth.shard.json
 git commit -m "Add model checkpoint"
 ```
 
-### 4. Push to Remote
-Upload your shards to a remote server.
+### 4. Push to Remote (Data)
+Upload your shards (the heavy data) to a Shard server.
 
 ```bash
+# Start a local server for testing (in a separate terminal)
+python -m shard.server.app
+
+# Push data to the server
 shard push --remote http://localhost:8000
 ```
 
-### 5. Pull and Checkout
-On another machine, pull the blocks and reconstruct the file.
+### 5. Push to Git (Manifests)
+Upload the manifests (the lightweight JSON pointers) to GitHub.
 
 ```bash
+git add models/resnet50.pth.shard.json
+git commit -m "Add model checkpoint"
+git push origin main
+```
+
+### 6. Pull and Checkout
+On another machine:
+1. `git pull` (gets the manifest)
+2. `shard pull ...` (gets the data)
+
+```bash
+git pull
 shard pull models/resnet50.pth.shard.json --remote http://localhost:8000
 shard checkout models/resnet50.pth.shard.json
+```
+
+## 🌍 Real World Workflow (Example)
+
+Imagine you are working on **MedScan-AI** and have a **10GB model file** (`models/brain_scan_v1.pth`). You cannot push this to GitHub.
+
+### 0. Prerequisite (Colleague's Machine)
+Your colleague needs Shard to get the data. They can install it easily:
+
+```bash
+# Option A: Install globally
+pip install shard-cli
+
+# Option B: Run without installing (like npx)
+# First, install pipx if you don't have it:
+python -m pip install --user pipx
+python -m pipx ensurepath
+
+# Then run shard:
+pipx run shard-cli help
+```
+
+### 1. Setup (One time)
+```bash
+cd MedScan-AI
+shard init
+shard git-init
+```
+
+### 2. Version the Heavy Model
+```bash
+# 1. Track the big file
+shard track models/brain_scan_v1.pth
+
+# 2. Commit it (Chunks it locally)
+shard commit -m "Add v1 model"
+# -> Creates models/brain_scan_v1.pth.shard.json
+```
+
+### 3. Push Data (To Shard Server)
+Send the 10GB of data to your storage server (not GitHub).
+```bash
+shard push --remote http://your-shard-server.com
+```
+
+### 4. Push Code (To GitHub)
+Send the tiny manifest file to GitHub.
+```bash
+git add models/brain_scan_v1.pth.shard.json
+git commit -m "Add model v1"
+git push origin main
+```
+
+### 5. Colleague Pulls
+Your colleague clones the repo and gets the model.
+```bash
+git pull
+shard pull models/brain_scan_v1.pth.shard.json --remote http://your-shard-server.com
+shard checkout models/brain_scan_v1.pth.shard.json
 ```
 
 ## 🛠 CLI Commands
