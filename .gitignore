@@ -1,0 +1,4 @@
+
+# Shard
+.shard/
+!*.shard.json

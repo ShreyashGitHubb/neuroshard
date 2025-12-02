@@ -1,0 +1,1 @@
+{"blocks": [{"hash": "24961b3c8fb63715a11b26bd12db9ad79202ee2226533f80e8517d33f431dd35", "size": 4194304}, {"hash": "ba70f53fc131d11aae2e9fd69080ac1a9a7afd81e34eaaaf987776105f25129e", "size": 1048576}], "file_path": "test_data_remote.bin", "manifest_version": 1, "meta": {"created_at": "2025-12-02T11:08:29Z", "message": "Remote test"}}
