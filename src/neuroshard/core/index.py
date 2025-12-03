@@ -1,6 +1,6 @@
 import os
 import json
-from typing import List, Set
+from typing import Set
 
 class Index:
     def __init__(self, root_dir: str = ".shard"):

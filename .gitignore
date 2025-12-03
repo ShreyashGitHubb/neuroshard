@@ -1,4 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
 
-# Shard
+# NeuroShard Runtime
 .shard/
-!*.shard.json
+server_storage/
+examples/test_data.bin
+examples/test_data_remote.bin
+examples/scripts/test_data.bin
+examples/scripts/test_data_remote.bin
+
+# IDEs
+.vscode/
+.idea/
+*.swp

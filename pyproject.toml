@@ -24,7 +24,7 @@ dependencies = [
 ]
 
 [project.scripts]
-nshard = "shard.cli.main:app"
+nshard = "neuroshard.cli:app"
 
 [tool.setuptools.packages.find]
-where = ["."]
+where = ["src"]

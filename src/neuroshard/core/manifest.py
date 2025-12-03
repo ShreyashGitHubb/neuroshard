@@ -6,7 +6,7 @@ from typing import List, Dict, Any, Tuple
 def create_manifest(file_path: str, blocks: List[Dict[str, Any]], meta: Dict[str, Any]) -> Tuple[str, Dict[str, Any]]:
     """
     Create a manifest dictionary and compute its hash.
-    Returns (manifest_hash, manifest_dict).
+    Returns (manifest_hash, manifest_dict, manifest_bytes).
     """
     # Filter out 'data' from blocks for the manifest
     clean_blocks = [

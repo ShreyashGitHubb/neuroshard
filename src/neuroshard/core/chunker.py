@@ -1,6 +1,6 @@
 import hashlib
 import zstandard as zstd
-from typing import List, Dict, Tuple
+from typing import List, Dict, Any
 
 CHUNK_SIZE = 4 * 1024 * 1024  # 4MB
 
@@ -18,7 +18,7 @@ def decompress_chunk(compressed_chunk: bytes) -> bytes:
     dctx = zstd.ZstdDecompressor()
     return dctx.decompress(compressed_chunk)
 
-def chunk_file(file_path: str) -> List[Dict[str, any]]:
+def chunk_file(file_path: str) -> List[Dict[str, Any]]:
     """
     Read a file, split it into chunks, compress them, and compute hashes.
     Returns a list of block metadata (hash, size, compressed_size).

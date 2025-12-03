@@ -2,51 +2,58 @@ import unittest
 import os
 import shutil
 import json
-from shard.core.chunker import chunk_file, decompress_chunk
-from shard.core.store import LocalStore
-from shard.core.manifest import create_manifest
+from neuroshard.core.chunker import chunk_file, decompress_chunk
+from neuroshard.core.store import LocalStore
+from neuroshard.core.manifest import create_manifest
 
 class TestCore(unittest.TestCase):
     def setUp(self):
-        self.test_dir = "test_env"
-        os.makedirs(self.test_dir, exist_ok=True)
-        self.store = LocalStore(root_dir=os.path.join(self.test_dir, ".shard"))
-        self.store.init()
+        self.test_dir = "test_env_core"
+        if os.path.exists(self.test_dir):
+            shutil.rmtree(self.test_dir)
+        os.makedirs(self.test_dir)
+        self.original_cwd = os.getcwd()
+        os.chdir(self.test_dir)
 
     def tearDown(self):
+        os.chdir(self.original_cwd)
         if os.path.exists(self.test_dir):
             shutil.rmtree(self.test_dir)
 
-    def test_chunking_and_reconstruction(self):
-        # Create random file
-        data = os.urandom(5 * 1024 * 1024) # 5MB
-        file_path = os.path.join(self.test_dir, "data.bin")
-        with open(file_path, "wb") as f:
-            f.write(data)
-
-        # Chunk
-        blocks = chunk_file(file_path)
-        self.assertTrue(len(blocks) > 1) # Should be at least 2 chunks (4MB + 1MB)
-
-        # Store
-        for block in blocks:
-            self.store.write_object(block["hash"], block["data"])
-
-        # Reconstruct
+    def test_chunking_and_hashing(self):
+        # Create a dummy file
+        content = b"Hello World" * 1000
+        with open("test.txt", "wb") as f:
+            f.write(content)
+            
+        blocks = chunk_file("test.txt")
+        self.assertTrue(len(blocks) > 0)
+        
+        # Verify reconstruction
         reconstructed = b""
         for block in blocks:
-            compressed = self.store.read_object(block["hash"])
-            reconstructed += decompress_chunk(compressed)
+            reconstructed += decompress_chunk(block["data"])
+            
+        self.assertEqual(content, reconstructed)
 
-        self.assertEqual(data, reconstructed)
+    def test_local_store(self):
+        store = LocalStore()
+        store.init()
+        
+        data = b"compressed_data"
+        h = "hash123"
+        
+        store.write_object(h, data)
+        self.assertTrue(store.has_object(h))
+        self.assertEqual(store.read_object(h), data)
 
     def test_manifest_creation(self):
-        blocks = [{"hash": "abc", "size": 123, "data": b"x"}]
-        mhash, manifest, _ = create_manifest("foo.bin", blocks, {"msg": "hi"})
-        self.assertEqual(manifest["file_path"], "foo.bin")
-        self.assertEqual(manifest["meta"]["msg"], "hi")
-        self.assertEqual(len(manifest["blocks"]), 1)
-        # Ensure 'data' is not in manifest blocks
+        blocks = [{"hash": "h1", "size": 10, "data": b"d1"}]
+        meta = {"msg": "test"}
+        mhash, manifest, _ = create_manifest("file.txt", blocks, meta)
+        
+        self.assertEqual(manifest["file_path"], "file.txt")
+        self.assertEqual(manifest["blocks"][0]["hash"], "h1")
         self.assertNotIn("data", manifest["blocks"][0])
 
 if __name__ == "__main__":

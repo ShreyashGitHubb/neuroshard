@@ -3,7 +3,7 @@ import os
 import shutil
 import json
 from typer.testing import CliRunner
-from shard.cli.main import app
+from neuroshard.cli import app
 
 class TestIntegration(unittest.TestCase):
     def setUp(self):

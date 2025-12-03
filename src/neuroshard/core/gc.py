@@ -1,7 +1,7 @@
 import os
 import json
 from typing import Set
-from shard.core.store import LocalStore
+from neuroshard.core.store import LocalStore
 
 def collect_garbage(dry_run: bool = False) -> int:
     """
