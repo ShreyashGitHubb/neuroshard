@@ -3,7 +3,7 @@ from neuroshard.commands import (
     init, track, commit, checkout, status, diff, gc, push, pull, git_init
 )
 
-app = typer.Typer(help="NeuroShard: Git for AI models.")
+app = typer.Typer(help="NeuroShard: Git for AI models.", epilog="Developed by Shreyash")
 
 app.add_typer(init.app, name="init")
 app.add_typer(track.app, name="track")
