@@ -1,14 +1,27 @@
 # 🧠 NeuroShard
 
+> **Git for AI models. Fast. Deduplicated. Reproducible.**
+
 [![PyPI version](https://badge.fury.io/py/neuroshard.svg)](https://badge.fury.io/py/neuroshard)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
 
-> **"Git for AI models. Fast. Deduplicated. Reproducible."**
+**NeuroShard** is the missing link in your MLOps stack. It’s a content-addressed version control system built specifically for large AI models and datasets.
 
-NeuroShard is the missing link in your MLOps stack. It’s a **content-addressed version control system** built specifically for large AI models and datasets.
+---
 
-Stop treating your 10GB model checkpoints like binary blobs. Treat them like code.
+## ⚡ TL;DR (Minimal Quickstart)
+
+Install and track your first model in 30 seconds:
+
+```bash
+pip install neuroshard
+
+# Initialize and track a file
+nshard init
+nshard track models/my-large-model.pth
+nshard commit -m "Initial checkpoint"
+```
 
 ---
 
@@ -19,19 +32,20 @@ Stop treating your 10GB model checkpoints like binary blobs. Treat them like cod
 - **Slow Clones**: Pulling a repo means pulling massive files you might not even need.
 - **Opaque History**: You can't see *what* changed in your model, only that it changed.
 
-## ✨ The NeuroShard Solution
+## ✨ Features (The Solution)
 
 NeuroShard uses **Content-Defined Chunking (CDC)** to split your massive files into small, deduplicated blocks.
 
-- **Smart**: It knows when you only changed a small part of your model (like fine-tuning a few layers).
-- **Efficient**: It **only uploads the unique chunks**. If 90% of your model is unchanged, you save 90% bandwidth and storage.
-- **Reproducible**: Manifests are small JSON files committed to Git. Your code and data are finally in sync.
+- **Smart Deduplication**: Only uploads unique chunks. If 90% of your model is unchanged, you save 90% bandwidth.
+- **Efficient Storage**: Stores changes (deltas) rather than full blobs.
+- **Git Integration**: Manifests are small JSON files committed to Git. Code and data stay in sync.
+- **Storage Agnostic**: Works with local storage and HTTP remotes (S3 coming soon).
 
 ---
 
-## ⚡ 30-Second Magic
+## ⚡ 30-Second Magic (Demo)
 
-Don't believe it? Watch this.
+See how NeuroShard saves bandwidth when fine-tuning a model:
 
 ```bash
 # 1. Track your massive model
@@ -53,7 +67,7 @@ $ nshard commit -m "Finetuned epoch 1"
 [+] Uploading... 150 MB sent. (98.5% Savings!) 🚀
 ```
 
-**You just saved 9.85 GB of upload bandwidth.**
+**Result: You just saved 9.85 GB of upload bandwidth.**
 
 ---
 
@@ -75,13 +89,13 @@ $ nshard commit -m "Finetuned epoch 1"
 pip install neuroshard
 ```
 
-## 🚀 Quickstart
+## 🚀 Usage Guide
 
 ### 1. Initialize
 ```bash
 cd my-project
 nshard init
-nshard git-init  # Configures .gitignore to ignore large files but track manifests
+nshard git-init  # Configures .gitignore
 ```
 
 ### 2. Track & Commit
@@ -92,7 +106,7 @@ nshard commit -m "Add model"
 
 ### 3. Push Data (To Storage)
 ```bash
-# Start a local server for testing (or use S3/GCS in prod)
+# Start a local server for testing
 python -m shard.server.app &
 
 nshard push --remote http://localhost:8000
@@ -134,6 +148,10 @@ Run tests:
 ```bash
 python -m unittest discover tests
 ```
+
+## 📜 License
+
+MIT License. See [LICENSE](LICENSE) for details.
 
 ---
 
